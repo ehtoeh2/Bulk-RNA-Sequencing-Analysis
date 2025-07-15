@@ -12,7 +12,6 @@ file_list <- c(
   "/My path to/Sample5.xlsx"
 )
 
-
 deg_data <- data.frame()
 
 
@@ -50,6 +49,5 @@ ggplot(deg_data, aes(x = condition, y = log2FoldChange, color = direction)) +
     axis.text.x = element_text(angle = 45, hjust = 1), 
     panel.grid.major = element_blank(),  
     panel.grid.minor = element_blank())   
-
 
 

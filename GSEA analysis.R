@@ -63,7 +63,6 @@ wanted_ID_gse <- c(
 )
 
 
-
 # Copy GSEA result and filter by selected GO terms
 gse_sel <- gse
 gse_sel@result <- gse@result[gse@result$ID %in% wanted_ID_gse, ]

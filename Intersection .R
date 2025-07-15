@@ -20,7 +20,6 @@ common_values_up <- Reduce(intersect, as.list(df_up[, c(
   "smaple5"
 )]))
 
-
 print(common_values_up)
 
 
@@ -31,7 +30,6 @@ common_values_down <- Reduce(intersect, as.list(df_down[, c(
   "smaple4", 
   "smaple5"
 )]))
-
 
 print(common_values_down)
 
