@@ -23,7 +23,6 @@ GSE5 <- c(read_excel("/My path to/sample5.xlsx", sheet = "Upregulated")[[7]],
                read_excel("/My path to/sample5.xlsx", sheet = "Downregulated")[[7]])
 
 
-
 deg_list <- list(
   Sample1 = GSE1,
   Sample2 = GSE2,
