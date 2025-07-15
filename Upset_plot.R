@@ -1,54 +1,58 @@
 
-
+# Load required libraries
 library(UpSetR)
 library(readxl)
 library(ComplexUpset)
 library(ComplexHeatmap)
 
 
-# 엑셀 파일 불러오기
-GSE65936 <- c(read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/JNCI_bulk (Tseng)/DEG_results(Tseng).xlsx", sheet = "Upregulated")[[7]],
-              read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/JNCI_bulk (Tseng)/DEG_results(Tseng).xlsx", sheet = "Downregulated")[[7]])
+# Read DEG gene symbols from each Excel file 
+GSE1 <- c(read_excel("/My path to/sample1.xlsx", sheet = "Upregulated")[[7]],
+              read_excel("/My path to/sample1.xlsx", sheet = "Downregulated")[[7]])
 
-GSE123310 <- c(read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/JEM_bulk(Rupert)/DEG_results(Rupert).xlsx", sheet = "Upregulated")[[7]],
-               read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/JEM_bulk(Rupert)/DEG_results(Rupert).xlsx", sheet = "Downregulated")[[7]])
+GSE2 <- c(read_excel("/My path to/sample2.xlsx", sheet = "Upregulated")[[7]],
+               read_excel("/My path to/sample2.xlsx", sheet = "Downregulated")[[7]])
 
-GSE142455_SC = c(read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/250304_JCI(joshua)/DEG_results(joshua_SC).xlsx", sheet = "Upregulated")[[7]], 
-                 read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/250304_JCI(joshua)/DEG_results(joshua_SC).xlsx", sheet = "Downregulated")[[7]])
+GSE3 <- c(read_excel("/My path to/sample3.xlsx", sheet = "Upregulated")[[7]],
+               read_excel("/My path to/sample3.xlsx", sheet = "Downregulated")[[7]])
 
-GSE142455_Orth = c(read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/250304_JCI(joshua)/DEG_results(joshua).xlsx", sheet = "Upregulated")[[7]], 
-                   read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/250304_JCI(joshua)/DEG_results(joshua).xlsx", sheet = "Downregulated")[[7]])
+GSE4 <- c(read_excel("/My path to/sample4.xlsx", sheet = "Upregulated")[[7]],
+               read_excel("/My path to/sample4.xlsx", sheet = "Downregulated")[[7]])
 
-GSE138464 = c(read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/250303_EMBO(sophia)/DEG_results(EMBO).xlsx", sheet = "Upregulated")[[7]], 
-              read_excel("/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Bulk_seq_analysis_practice/250303_EMBO(sophia)/DEG_results(EMBO).xlsx", sheet = "Downregulated")[[7]])
+GSE5 <- c(read_excel("/My path to/sample5.xlsx", sheet = "Upregulated")[[7]],
+               read_excel("/My path to/sample5.xlsx", sheet = "Downregulated")[[7]])
 
 
 
 deg_list <- list(
-  GSE65936 = GSE65936,
-  GSE123310 = GSE123310,
-  GSE142455_SC = GSE142455_SC,
-  GSE142455_Orth = GSE142455_Orth,
-  GSE138464 = GSE138464
+  Sample1 = GSE1,
+  Sample2 = GSE2,
+  Sample3 = GSE3,
+  Sample4 = GSE4,
+  Sample5 = GSE5
 )
 
 
 
-# 모든 유전자 리스트 통합
+# Get all unique gene symbols across datasets
 all_genes <- unique(unlist(deg_list))
 
-# 바이너리 매트릭스 생성
+# Fill binary 1/0 indicating whether a gene appears in each dataset
 deg_matrix <- data.frame(Gene = all_genes)
 
 for (name in names(deg_list)) {
   deg_matrix[[name]] <- as.integer(deg_matrix$Gene %in% deg_list[[name]])
 }
 
-# Gene 열을 rownames으로 변경
+# Set row names as gene names, then remove gene column
 rownames(deg_matrix) <- deg_matrix$Gene
 deg_matrix$Gene <- NULL
 
 
+
+#----------------------------------------------------------------------
+
+# Create intersection matrix using ComplexHeatmap
 
 m = make_comb_mat(deg_matrix, mode = 'intersect')
 
@@ -56,10 +60,15 @@ m2 <- m[comb_degree(m) %in% c(1, 2, 3, 4, 5)]
 ss2 = set_size(m2)
 cs2 = comb_size(m2)
 
-ss2
-cs2
 comb_colors <- ifelse(comb_degree(m2) == 5, "black", "black") 
 
+
+
+
+
+#----------------------------------------------------------------------
+
+# Create the UpSet plot with customized annotations
 ht = UpSet(m2, 
            pt_size = unit(5, "mm"),  # 점 크기 키우기
            lwd = 4,
@@ -103,17 +112,6 @@ decorate_annotation("DEG Intersections", {
             default.units = "native", just = c("left", "bottom"), 
             gp = gpar(fontsize = 6, col = "#404040"), rot = 45)
 })
-
-
-
-
-
-
-
-
-
-
-
 
 
 

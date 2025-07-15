@@ -7,102 +7,113 @@ library(pheatmap)
 library(openxlsx)
 library(sva)
 library(enrichplot)
+library(ggplot2)
+
+#Set the seed for reproducibility 
 set.seed(1234)  
 
-res_df1 <- readRDS(file = "/Users/daehwankim/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Seqencing_Practicing/Cachexia (통합본)/res_df1.rds")
 
-
-
+# Read in transcript-to-gene mapping files 
 TXNAME <- read.delim('/Users/daehwankim/Desktop/sequencing data/Bulk_seq_practice/TXNAME',header = F)
 SYMBOL <-read.delim('/Users/daehwankim/Desktop/sequencing data/Bulk_seq_practice/SYMBOL',header = F)
 tx2gene <- data.frame(TXNAME, SYMBOL)
 colnames(tx2gene) <- c("TXNAME", "SYMBOL")
 
-sample1 <- c('JCI(Joshua)_Cont1.tsv','JCI(Joshua)_Cont2.tsv','JCI(Joshua)_Cont3.tsv','JCI(Joshua)_Cont4.tsv',
-             "JCI(Joshua)_Sham1.tsv","JCI(Joshua)_Sham2.tsv","JCI(Joshua)_Sham3.tsv","JCI(Joshua)_Sham4.tsv",
-             "JNCI(Tseng)_Cont1.tsv","JNCI(Tseng)_Cont2.tsv","JNCI(Tseng)_Cont3.tsv",
-             "JEM(Rupert)_Sham1.tsv", "JEM(Rupert)_Sham2.tsv", "JEM(Rupert)_Sham3.tsv",
-             "Embo(sophia)_Cont1.tsv","Embo(sophia)_Cont2.tsv","Embo(sophia)_Cont3.tsv","Embo(sophia)_Cont4.tsv","Embo(sophia)_Cont5.tsv","Embo(sophia)_Cont6.tsv",
-             
-             "JCI(Joshua)_SC1.tsv","JCI(Joshua)_SC2.tsv","JCI(Joshua)_SC3.tsv","JCI(Joshua)_SC4.tsv",
-             "JCI(Joshua)_SPC1.tsv","JCI(Joshua)_SPC2.tsv","JCI(Joshua)_SPC3.tsv","JCI(Joshua)_SPC4.tsv",
-             "JNCI(Tseng)_C261.tsv","JNCI(Tseng)_C262.tsv","JNCI(Tseng)_C263.tsv",
-             "JEM(Rupert)_KPC1.tsv","JEM(Rupert)_KPC2.tsv","JEM(Rupert)_KPC3.tsv","JEM(Rupert)_KPC4.tsv",
-             "Embo(sophia)_CX1.tsv","Embo(sophia)_CX2.tsv","Embo(sophia)_CX3.tsv", "Embo(sophia)_CX4.tsv")
+
+sample1 <- c(
+  "Sample1_Cont1.tsv", "Sample1_Cont2.tsv", "Sample1_Cont3.tsv", "Sample1_Cont4.tsv",
+  "Sample1_Sham1.tsv", "Sample1_Sham2.tsv", "Sample1_Sham3.tsv", "Sample1_Sham4.tsv",
+  "Sample2_Cont1.tsv", "Sample2_Cont2.tsv", "Sample2_Cont3.tsv",
+  "Sample3_Sham1.tsv", "Sample3_Sham2.tsv", "Sample3_Sham3.tsv",
+  "Sample4_Cont1.tsv", "Sample4_Cont2.tsv", "Sample4_Cont3.tsv", "Sample4_Cont4.tsv", "Sample4_Cont5.tsv", "Sample4_Cont6.tsv",
+  
+  "Sample1_SC1.tsv", "Sample1_SC2.tsv", "Sample1_SC3.tsv", "Sample1_SC4.tsv",
+  "Sample1_SPC1.tsv", "Sample1_SPC2.tsv", "Sample1_SPC3.tsv", "Sample1_SPC4.tsv",
+  "Sample2_C261.tsv", "Sample2_C262.tsv", "Sample2_C263.tsv",
+  "Sample3_KPC1.tsv", "Sample3_KPC2.tsv", "Sample3_KPC3.tsv", "Sample3_KPC4.tsv",
+  "Sample4_CX1.tsv", "Sample4_CX2.tsv", "Sample4_CX3.tsv", "Sample4_CX4.tsv"
+)
+
              
 
 sample1 <- as.data.frame(sample1)
 
 
-files1 <- file.path('/Users/daehwankim/Desktop/sequencing data/Integrated data', sample1$sample1)
-names(files1) <- c('JCI(Joshua)_Cont1.tsv','JCI(Joshua)_Cont2.tsv','JCI(Joshua)_Cont3.tsv','JCI(Joshua)_Cont4.tsv',
-                   "JCI(Joshua)_Sham1.tsv","JCI(Joshua)_Sham2.tsv","JCI(Joshua)_Sham3.tsv","JCI(Joshua)_Sham4.tsv",
-                   "JNCI(Tseng)_Cont1.tsv","JNCI(Tseng)_Cont2.tsv","JNCI(Tseng)_Cont3.tsv",
-                   "JEM(Rupert)_Sham1.tsv", "JEM(Rupert)_Sham2.tsv", "JEM(Rupert)_Sham3.tsv",
-                   "Embo(sophia)_Cont1.tsv","Embo(sophia)_Cont2.tsv","Embo(sophia)_Cont3.tsv","Embo(sophia)_Cont4.tsv","Embo(sophia)_Cont5.tsv","Embo(sophia)_Cont6.tsv",
-                   
-                   "JCI(Joshua)_SC1.tsv","JCI(Joshua)_SC2.tsv","JCI(Joshua)_SC3.tsv","JCI(Joshua)_SC4.tsv",
-                   "JCI(Joshua)_SPC1.tsv","JCI(Joshua)_SPC2.tsv","JCI(Joshua)_SPC3.tsv","JCI(Joshua)_SPC4.tsv",
-                   "JNCI(Tseng)_C261.tsv","JNCI(Tseng)_C262.tsv","JNCI(Tseng)_C263.tsv",
-                   "JEM(Rupert)_KPC1.tsv","JEM(Rupert)_KPC2.tsv","JEM(Rupert)_KPC3.tsv","JEM(Rupert)_KPC4.tsv",
-                   "Embo(sophia)_CX1.tsv","Embo(sophia)_CX2.tsv","Embo(sophia)_CX3.tsv", "Embo(sophia)_CX4.tsv")
+files1 <- file.path('/My path to/Integrated data', sample1$sample1)
+names(files1) <- c(
+  "Sample1_Cont1.tsv", "Sample1_Cont2.tsv", "Sample1_Cont3.tsv", "Sample1_Cont4.tsv",
+  "Sample1_Sham1.tsv", "Sample1_Sham2.tsv", "Sample1_Sham3.tsv", "Sample1_Sham4.tsv",
+  "Sample2_Cont1.tsv", "Sample2_Cont2.tsv", "Sample2_Cont3.tsv",
+  "Sample3_Sham1.tsv", "Sample3_Sham2.tsv", "Sample3_Sham3.tsv",
+  "Sample4_Cont1.tsv", "Sample4_Cont2.tsv", "Sample4_Cont3.tsv", "Sample4_Cont4.tsv", "Sample4_Cont5.tsv", "Sample4_Cont6.tsv",
+  
+  "Sample1_SC1.tsv", "Sample1_SC2.tsv", "Sample1_SC3.tsv", "Sample1_SC4.tsv",
+  "Sample1_SPC1.tsv", "Sample1_SPC2.tsv", "Sample1_SPC3.tsv", "Sample1_SPC4.tsv",
+  "Sample2_C261.tsv", "Sample2_C262.tsv", "Sample2_C263.tsv",
+  "Sample3_KPC1.tsv", "Sample3_KPC2.tsv", "Sample3_KPC3.tsv", "Sample3_KPC4.tsv",
+  "Sample4_CX1.tsv", "Sample4_CX2.tsv", "Sample4_CX3.tsv", "Sample4_CX4.tsv"
+)
 
 
+
+# Import transcript-level quantification results from Kallisto and summarize to gene-level
 txi.kallisto.tsv1 <- tximport(files1, type = 'kallisto', tx2gene = tx2gene, ignoreAfterBar = TRUE, ignoreTxVersion = TRUE)
 
-sampleTable1 <- data.frame(condition=factor(rep(c("Control", "Cachexia"), times = c(20, 19))))
+sampleTable1 <- data.frame(condition=factor(rep(c("Control", "Experimental"), times = c(20, 19))))
 
+
+# Define Batch information for each sample
 batch <- c(
   #Control
-  rep("JCI_Joshua", 4),     
-  rep("JCI_Joshua2", 4),
-  rep("JNCI_Tseng", 3),
-  rep("JEM_Rupert", 3),
-  rep("Embo_sophia", 6),
+  rep("Sample1", 4),     
+  rep("Sample2", 4),
+  rep("Sample3", 3),
+  rep("Sample4", 3),
+  rep("Sample5", 6),
   
-  #Cachexia
-rep("JCI_Joshua", 4),     
-rep("JCI_Joshua2", 4),
-rep("JNCI_Tseng", 3),
-rep("JEM_Rupert", 4),
-rep("Embo_sophia", 4))
+  #Experimental
+  rep("Sample1", 4),     
+  rep("Sample2", 4),
+  rep("Sample3", 3),
+  rep("Sample4", 4),
+  rep("Sample5", 4))
 
-length(batch)
+
 sampleTable1$batch <- factor(batch)
-sampleTable1 
 
+# Set the row names of the sample table 
 rownames(sampleTable1) <- colnames(txi.kallisto.tsv1$counts)
+
+
+# Create a DESeq2 dataset object 
 dds1 <- DESeqDataSetFromTximport(txi.kallisto.tsv1, sampleTable1, ~condition)
 
-dds1
 
-#1
+#-------------------------------PCA Plot --------------------------------------------------
+# Apply variance-stabilizing transformation (VST)
 vst_dds <- vst(dds1, blind = TRUE)
 
-View(vst_dds@assays@data)
 
-# 4. 교정 전 PCA 확인 (옵션)
+# PCA before batch correction (optional)
 pca_dat_raw <- plotPCA(vst_dds, intgroup = c("batch","condition"), returnData=TRUE)
 ggplot(pca_dat_raw, aes(PC1, PC2, color=condition, shape=condition)) +
   geom_point(size=3) +
   ggtitle("Before ComBat")
 
-# 5. ComBat 으로 배치 교정
-mat       <- assay(vst_dds)                   # 행렬 추출
-batch_vec <- sampleTable1$batch               # 배치 정보
-mod       <- model.matrix(~ condition, sampleTable1)  # condition 보존 모델
+# Apply ComBat for batch correction (For visualization)
+mat       <- assay(vst_dds)                   
+batch_vec <- sampleTable1$batch               
+mod       <- model.matrix(~ condition, sampleTable1)  
 
 mat_combat <- ComBat(dat   = mat,
                      batch = batch_vec,
                      mod   = mod)
 
-# 6. 교정된 값으로 덮어쓰기
+# Overwrite vst values with ComBat-corrected matrix
 assay(vst_dds) <- mat_combat
 
-assay(vst_dds)
 
-
-# 7. 교정 후 PCA 확인
+# PCA after batch correction
 pca_dat_bc <- plotPCA(vst_dds, intgroup = c("batch","condition"), returnData=TRUE)
 ggplot(pca_dat_bc, aes(PC1, PC2, color=condition, shape=batch)) +
   geom_point(size=3) +
@@ -110,25 +121,19 @@ ggplot(pca_dat_bc, aes(PC1, PC2, color=condition, shape=batch)) +
 
 
 
-#PCA plot
-pca_dat_bc <- plotPCA(vst_dds, intgroup = c("batch","condition"), returnData=TRUE) #returnData를 ture로 설정하면 그림이 아닌 데이터프레임으로 결과를 받음
-pca_dat_bc
+#Create PCA plot
+pca_dat_bc <- plotPCA(vst_dds, intgroup = c("batch","condition"), returnData=TRUE) 
+percentVar <- round(100 * attr(pca_dat_bc, "percentVar")) 
 
-percentVar <- round(100 * attr(pca_dat_bc, "percentVar")) #분산 기여도를 %로 나타내서 보여줌
-percentVar
-
-
-library(ggplot2)
 
 ggplot(pca_dat_bc, aes(x = PC1, y = PC2, color = condition)) +
   geom_point(aes(shape = batch), size = 2) +
   scale_shape_manual(values = c(15, 16, 17, 0, 1, 2, 3, 6)) +
-  scale_color_manual(values = c("Control" = "#077297", "Cachexia" = "#B24745")) +  # condition 별 색
+  scale_color_manual(values = c("Control" = "#077297", "Experimental" = "#B24745")) +  
   
-  # 95% 신뢰 타원(ellipse) 추가
   stat_ellipse(aes(group = condition), 
-               type  = "norm",    # 모양: 정규분포 기반 타원
-               level = 0.95,      # 95% 신뢰구간
+               type  = "norm",    
+               level = 0.95,      
                linetype = "dashed", 
                size = 0.5) +
   
@@ -148,89 +153,66 @@ ggplot(pca_dat_bc, aes(x = PC1, y = PC2, color = condition)) +
 
 
 
+#-------------------------------Heatmap Plot --------------------------------------------------
 
-
-
-#DESeq2돌리기 위해 다시 batch effect 줄이기 = 이거는 DEseq2를 위한 보정이고, 아까 combat은 시각화용 데이터임
+# Rebuild DESeq2 object with batch effect 
+# (This is for statistical testing, unlike ComBat which was used for visualization only)
 
 dds_batch <- DESeqDataSetFromTximport(txi.kallisto.tsv1, sampleTable1, 
                                       design = ~ batch + condition)
 
 
 
-# (필요시) low count 필터링
-keep <- rowSums(counts(dds_batch) >= 10) >= 2
-dds_batch  <- dds_batch[keep,]
-
-
-
-
-
-
-#1
+#Run DESeq2 differential expression analysis
 deseq2.dds1 <- DESeq(dds_batch)										
 deseq2.res1 <- results(deseq2.dds1)			
 deseq2.res1 <- deseq2.res1[order(rownames(deseq2.res1)),]
 
 
-
-# Select top 50 differentially expressed genes
-
+# Get top 50 most significant genes (lowest padj)
 res1 <- deseq2.res1
-res1 <- na.omit(res1) #결측값 제거
-res_ordered1 <- res1[order(res1$padj),] #padj값 오름차순으로 정렬
+res1 <- na.omit(res1) 
+res_ordered1 <- res1[order(res1$padj),] 
 top_genes1 <- row.names(res_ordered1)[1:50] 
 
 
 # Extract counts and normalize
-counts1 <- counts(deseq2.dds1, normalized = T)
-counts_top1 <- counts1[top_genes1,]
+counts_norm <- counts(deseq2.dds1, normalized = TRUE)
+counts_top <- counts_norm[top_genes,]
 
+# Apply log2 transformation to stabilize variance
 log_counts_top1 <- log2(counts_top1 + 1)
 
-# Generate heatmap
 
-#1
+
+# Annotation for sample groups
 annotation_col <- data.frame(
-  Condition = c(rep("Control", 20), rep("Cachexia", 19))
+  Condition = c(rep("Control", 20), rep("Experimental", 19))
 )
 
-rownames(annotation_col)
-colnames(log_counts_top1)
-
-# 샘플 이름과 맞추기
+# Match row names of the annotation to column names of the count matrix
 rownames(annotation_col) <- colnames(log_counts_top1)
 
-# Condition별 색상 지정
-
-colors()
-
-ann_colors <- list(
-  Condition = c(Control = "cyan2", Cachexia = "darkred")  # 원하는 색상으로 변경 가능
-)
-
-
-ann_colors <- list(
-  Condition = c(Control = "#077297", Cachexia = "#B24745")  # 원하는 색상으로 변경 가능
-)
-
+# Define colors for each condition
+ann_colors <- list(Condition = c(Control = "#077297", Experimental = "#B24745"))
 heatmap_colors <- colorRampPalette(c("blue3", "white", "red3"))(100)
-heatmap_colors <- colorRampPalette(c("#4F7090", "white", "#FF7171"))(100)
 
 
-pastel_colors <- colorRampPalette(c("#FFE6B3", "#FFFFFF", "#B3FFCC"))(100)
+# Create a heatmap plot
+pheatmap(log_counts_top1, 
+         scale = "row", 
+         angle_col = 315,
+         annotation_col = annotation_col,  
+         annotation_colors = ann_colors,  
+         cluster_cols = FALSE,  
+         show_colnames = FALSE, 
+         color = heatmap_colors)  
 
-cyborg_colors <- colorRampPalette(c("#00FFFF", "#000000", "#FF00FF"))(100)
-
-heatmap_colors <- colorRampPalette(c("blue", "green", "yellow"))(100)
 
 
-cyborg_light <- colorRampPalette(
-  c("#66FFFF",  # 옅은 시안
-    "#FFFFFF",  # 화이트
-    "#FF66FF"   # 옅은 마젠타
-  )
-)(100)
+
+
+
 
 volcanoplot_color <- colorRampPalette(c("#173379", "white", "#bb0c00"))(100)
 
@@ -242,17 +224,6 @@ genes_of_interest <- c("Tgfb1", "Col1a1", "Mmp2", "Apod","Mmp3")
 
 # 🔹 해당 유전자들의 count 데이터 추출 (정규화된 값에서)
 counts_subset <- counts1[rownames(counts1) %in% genes_of_interest, ]
-
-
-# Heatmap 그리기
-pheatmap(log_counts_top1, 
-         scale = "row", 
-         angle_col = 315,
-         annotation_col = annotation_col,  # 그룹화된 컬러 표시
-         annotation_colors = ann_colors,  # 그룹색상 지정
-         cluster_cols = FALSE,  # 샘플 순서 유지
-         show_colnames = FALSE, # 샘플 이름 숨기기
-         color = heatmap_colors)  
 
 
 
