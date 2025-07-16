@@ -8,7 +8,7 @@ This repository contains code for integrated analysis of bulk RNA sequencing dat
 It provides a pipeline for differential expression analysis (DEG), over-representation analysis (ORA), and gene set enrichment analysis (GSEA)  
 
 
-In addition, various visualization tools are included, such as **Miami plots** and **UpSet plots**, to help interpret the results effectively
+In addition, various visualization tools are included, such as **Volcano plot**, **Miami plots** and **UpSet plots**, to help interpret the results effectively
 
 
 
