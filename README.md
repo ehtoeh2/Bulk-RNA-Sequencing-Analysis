@@ -9,3 +9,10 @@ It provides a pipeline for differential expression analysis (DEG), over-represen
 
 
 In addition, various visualization tools are included, such as **Miami plots** and **UpSet plots**, to help interpret the results effectively
+
+
+
+
+
+#Miami plot
+<img width="241" height="180" alt="image" src="https://github.com/user-attachments/assets/a8c3b6e4-2d9a-4b32-9a6c-d53470569e09" />
