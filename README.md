@@ -19,7 +19,7 @@ In addition, various visualization tools are included, such as **Volcano plot**,
 
 **#Volcano plot**
 
-<img width="536" height="305" alt="image" src="https://github.com/user-attachments/assets/a55d5123-9021-46c8-b922-1824eead9137" />
+<img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/a55d5123-9021-46c8-b922-1824eead9137" />
 
 
 **#Miami plot**
