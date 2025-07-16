@@ -16,4 +16,4 @@ In addition, various visualization tools are included, such as **Miami plots** a
 
 #Miami plot
 
-<img width="241" height="180" alt="image" src="https://github.com/user-attachments/assets/a8c3b6e4-2d9a-4b32-9a6c-d53470569e09" />
+<img width="457" height="384" alt="Screenshot 2025-07-16 at 10 17 35 AM" src="https://github.com/user-attachments/assets/d95d2e42-0155-492b-a0d9-cc9d8607dc41" />
