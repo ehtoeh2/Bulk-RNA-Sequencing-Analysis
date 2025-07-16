@@ -28,4 +28,5 @@ In addition, various visualization tools are included, such as **Volcano plot**,
 
 **#Ridge plot (GSEA)**
 
-<img width="294" height="294" alt="image" src="https://github.com/user-attachments/assets/2ad6580f-e59e-42ce-9d91-77ad9088a56c" />
+<img width="402" height="396" alt="image" src="https://github.com/user-attachments/assets/f1c28474-3535-4ac1-b208-983cd0e36029" />
+
