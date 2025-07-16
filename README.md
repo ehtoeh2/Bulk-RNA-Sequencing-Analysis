@@ -38,3 +38,7 @@ In addition, various visualization tools are included, such as **Volcano plot**,
 
 <img width="447" height="249" alt="image" src="https://github.com/user-attachments/assets/3074858c-10c1-413c-ab31-518a1752d8d1" />
 
+
+**#Heatmap plot**
+
+<img width="447" height="249" alt="image" src="https://github.com/user-attachments/assets/a011354b-2798-4da1-9a1b-cbc89afa164b" />
