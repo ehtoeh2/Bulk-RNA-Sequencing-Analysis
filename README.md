@@ -34,3 +34,7 @@ In addition, various visualization tools are included, such as **Volcano plot**,
 
 <img width="402" height="396" alt="image" src="https://github.com/user-attachments/assets/f1c28474-3535-4ac1-b208-983cd0e36029" />
 
+**#PCA plot**
+
+<img width="447" height="249" alt="image" src="https://github.com/user-attachments/assets/3074858c-10c1-413c-ab31-518a1752d8d1" />
+
